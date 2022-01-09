@@ -16,36 +16,26 @@ type ReportedIssues struct {
 }
 
 func (c *Client) ReportedIssues(userName string) ([]Issue, error) {
+	var query ReportedIssues
 	issues := []Issue{}
-	var cursor *graphql.String
-	limit := c.Limit
-	for {
-		var query ReportedIssues
-		variables := map[string]interface{}{
-			"limit":    graphql.Int(limit),
+	if err := c.Paginate(
+		"ReportedIssues",
+		&query,
+		map[string]interface{}{
 			"userName": graphql.String(userName),
 			"from":     graphql.String(c.From.Format(time.RFC3339)),
-			"after":    cursor,
-		}
-		if cursor != nil {
-			variables["after"] = graphql.NewString(*cursor)
-		}
-		if err := c.GQL.Query("ReportedIssues", &query, variables); err != nil {
-			return nil, err
-		}
-		for _, issue := range query.User.Issues.Nodes {
-			if issue.CreatedAt.Before(c.From) {
-				continue
+		},
+		func() (PageInfo, int) {
+			for _, issue := range query.User.Issues.Nodes {
+				if issue.CreatedAt.Before(c.From) {
+					continue
+				}
+				issues = append(issues, issue)
 			}
-			issues = append(issues, issue)
-		}
-		limit -= len(issues)
-		pageInfo := query.User.Issues.PageInfo
-		if !pageInfo.HasNextPage || limit <= 0 {
-			break
-		}
-		endCursor := graphql.NewString(graphql.String(pageInfo.EndCursor))
-		cursor = endCursor
+			return query.User.Issues.PageInfo, len(issues)
+		},
+	); err != nil {
+		return nil, err
 	}
 	return issues, nil
 }
