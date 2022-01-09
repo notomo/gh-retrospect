@@ -2,17 +2,19 @@ package retrospect
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/notomo/gh-retrospect/retrospect/query"
 )
 
 type Collected struct {
+	From           time.Time     `json:"from"`
 	ClosedIssues   []query.Issue `json:"closedIssues"`
 	ReportedIssues []query.Issue `json:"reportedIssues"`
 }
 
 func Collect(client *query.Client, userName string) (*Collected, error) {
-	collected := Collected{}
+	collected := Collected{From: client.From}
 
 	name, err := client.ViewerName(userName)
 	if err != nil {
