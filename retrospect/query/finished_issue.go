@@ -16,8 +16,9 @@ type ClosedIssues struct {
 }
 
 func (c *Client) ClosedIssues(userName string) ([]Issue, error) {
-	var query ClosedIssues
 	issues := []Issue{}
+
+	var query ClosedIssues
 	if err := c.Paginate(
 		"ClosedIssues",
 		&query,
@@ -37,5 +38,6 @@ func (c *Client) ClosedIssues(userName string) ([]Issue, error) {
 	); err != nil {
 		return nil, err
 	}
+
 	return issues, nil
 }

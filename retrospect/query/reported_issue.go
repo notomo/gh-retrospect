@@ -16,8 +16,9 @@ type ReportedIssues struct {
 }
 
 func (c *Client) ReportedIssues(userName string) ([]Issue, error) {
-	var query ReportedIssues
 	issues := []Issue{}
+
+	var query ReportedIssues
 	if err := c.Paginate(
 		"ReportedIssues",
 		&query,
@@ -37,5 +38,6 @@ func (c *Client) ReportedIssues(userName string) ([]Issue, error) {
 	); err != nil {
 		return nil, err
 	}
+
 	return issues, nil
 }
