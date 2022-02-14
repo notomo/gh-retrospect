@@ -7,6 +7,8 @@ type PageInfo struct {
 	HasNextPage bool   `json:"has_next_page"`
 }
 
+const limitPerRequest = 100
+
 func (c *Client) Paginate(
 	name string,
 	query interface{},
@@ -22,7 +24,7 @@ func (c *Client) Paginate(
 		}
 
 		vars := map[string]interface{}{
-			"limit": graphql.Int(limit),
+			"limit": graphql.Int(limitPerRequest),
 			"after": cursor,
 		}
 		for k, v := range variables {

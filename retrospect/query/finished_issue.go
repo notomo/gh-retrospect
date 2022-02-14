@@ -39,5 +39,8 @@ func (c *Client) ClosedIssues(userName string) ([]Issue, error) {
 		return nil, err
 	}
 
+	if len(issues) > c.Limit {
+		return issues[:c.Limit], nil
+	}
 	return issues, nil
 }
