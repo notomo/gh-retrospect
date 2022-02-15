@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -13,28 +14,43 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+const (
+	paramUser   = "user"
+	paramLimit  = "limit"
+	paramFrom   = "from"
+	paramOutput = "output"
+)
+
 func main() {
 	app := &cli.App{
-		Name:   "gh-retrospect",
-		Action: run,
+		Name: "gh-retrospect",
+		Action: func(c *cli.Context) error {
+			return Run(
+				c.String(paramUser),
+				c.Int(paramLimit),
+				c.String(paramFrom),
+				c.String(paramOutput),
+				os.Stdout,
+			)
+		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "user",
+				Name:  paramUser,
 				Value: "",
 				Usage: "user name (default: authenticated user)",
 			},
 			&cli.IntFlag{
-				Name:  "limit",
+				Name:  paramLimit,
 				Value: 100,
 				Usage: "limit to retrieve by each section",
 			},
 			&cli.StringFlag{
-				Name:  "from",
+				Name:  paramFrom,
 				Value: "",
 				Usage: "YYYY-mm-dd format date, default: last week date",
 			},
 			&cli.StringFlag{
-				Name:  "output",
+				Name:  paramOutput,
 				Value: "json",
 				Usage: "outputter type",
 			},
@@ -45,30 +61,35 @@ func main() {
 	}
 }
 
-func run(c *cli.Context) error {
+func Run(
+	userName string,
+	limit int,
+	fromDate string,
+	outputterType string,
+	writer io.Writer,
+) error {
 	gql, err := gh.GQLClient(nil)
 	if err != nil {
 		return fmt.Errorf("create gql client: %w", err)
 	}
 
-	from, err := retrospect.ParseDate(c.String("from"))
+	from, err := retrospect.ParseDate(fromDate)
 	if err != nil {
-		return fmt.Errorf("parse 'from' date: %w", err)
+		return fmt.Errorf("parse date: %w", err)
 	}
 
-	client := query.NewClient(gql, from, c.Int("limit"))
+	client := query.NewClient(gql, from, limit)
 
-	outputter, err := outputter.Get(c.String("output"))
+	outputter, err := outputter.Get(outputterType)
 	if err != nil {
 		return fmt.Errorf("get outputter: %w", err)
 	}
 
-	collected, err := retrospect.Collect(client, c.String("user"))
+	collected, err := retrospect.Collect(client, userName)
 	if err != nil {
 		return fmt.Errorf("collect: %w", err)
 	}
 
-	writer := os.Stdout
 	if err := outputter.Output(writer, collected); err != nil {
 		return fmt.Errorf("output: %w", err)
 	}
