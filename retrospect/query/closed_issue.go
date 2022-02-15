@@ -2,8 +2,6 @@ package query
 
 import (
 	"time"
-
-	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type ClosedIssues struct {
@@ -15,32 +13,37 @@ type ClosedIssues struct {
 	} `graphql:"user(login: $userName)"`
 }
 
-func (c *Client) ClosedIssues(userName string) ([]Issue, error) {
+func (c *Client) ClosedIssues(
+	userName string,
+	from time.Time,
+	limit int,
+) ([]Issue, error) {
 	issues := []Issue{}
 
 	var query ClosedIssues
 	if err := c.Paginate(
 		"ClosedIssues",
 		&query,
-		map[string]interface{}{
-			"userName": graphql.String(userName),
-			"from":     graphql.String(c.From.Format(time.RFC3339)),
-		},
+		NewParameter(
+			WithUserName(userName),
+			WithFrom(from),
+		),
 		func() (PageInfo, int) {
 			for _, issue := range query.User.Issues.Nodes {
-				if issue.ClosedAt.Before(c.From) {
+				if issue.ClosedAt.Before(from) {
 					continue
 				}
 				issues = append(issues, issue)
 			}
 			return query.User.Issues.PageInfo, len(issues)
 		},
+		limit,
 	); err != nil {
 		return nil, err
 	}
 
-	if len(issues) > c.Limit {
-		return issues[:c.Limit], nil
+	if len(issues) > limit {
+		return issues[:limit], nil
 	}
 	return issues, nil
 }

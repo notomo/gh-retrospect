@@ -14,15 +14,11 @@ func (c *Client) Paginate(
 	query interface{},
 	variables map[string]interface{},
 	each func() (PageInfo, int),
+	limit int,
 ) error {
 	var cursor *graphql.String
 	currentCount := 0
-	for {
-		limit := c.Limit - currentCount
-		if limit <= 0 {
-			break
-		}
-
+	for limit-currentCount > 0 {
 		vars := map[string]interface{}{
 			"limit": graphql.Int(limitPerRequest),
 			"after": cursor,

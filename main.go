@@ -72,20 +72,19 @@ func Run(
 	if err != nil {
 		return fmt.Errorf("create gql client: %w", err)
 	}
+	client := query.NewClient(gql)
 
 	from, err := retrospect.ParseDate(fromDate)
 	if err != nil {
 		return fmt.Errorf("parse date: %w", err)
 	}
 
-	client := query.NewClient(gql, from, limit)
-
 	outputter, err := outputter.Get(outputterType)
 	if err != nil {
 		return fmt.Errorf("get outputter: %w", err)
 	}
 
-	collected, err := retrospect.Collect(client, userName)
+	collected, err := retrospect.Collect(client, userName, from, limit)
 	if err != nil {
 		return fmt.Errorf("collect: %w", err)
 	}
