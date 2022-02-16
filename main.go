@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/cli/go-gh"
+	"github.com/cli/go-gh/pkg/api"
 	"github.com/notomo/gh-retrospect/retrospect"
 	"github.com/notomo/gh-retrospect/retrospect/outputter"
 	"github.com/notomo/gh-retrospect/retrospect/query"
@@ -25,7 +26,13 @@ func main() {
 	app := &cli.App{
 		Name: "gh-retrospect",
 		Action: func(c *cli.Context) error {
+			opts := &api.ClientOptions{}
+			gql, err := gh.GQLClient(opts)
+			if err != nil {
+				return fmt.Errorf("create gql client: %w", err)
+			}
 			return Run(
+				gql,
 				c.String(paramUser),
 				c.Int(paramLimit),
 				c.String(paramFrom),
@@ -62,18 +69,13 @@ func main() {
 }
 
 func Run(
+	gql api.GQLClient,
 	userName string,
 	limit int,
 	fromDate string,
 	outputterType string,
 	writer io.Writer,
 ) error {
-	gql, err := gh.GQLClient(nil)
-	if err != nil {
-		return fmt.Errorf("create gql client: %w", err)
-	}
-	client := query.NewClient(gql)
-
 	from, err := retrospect.ParseDate(fromDate)
 	if err != nil {
 		return fmt.Errorf("parse date: %w", err)
@@ -84,6 +86,7 @@ func Run(
 		return fmt.Errorf("get outputter: %w", err)
 	}
 
+	client := query.NewClient(gql)
 	collected, err := retrospect.Collect(client, userName, from, limit)
 	if err != nil {
 		return fmt.Errorf("collect: %w", err)
