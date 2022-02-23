@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/notomo/gh-retrospect/retrospect/expose"
+	"github.com/notomo/gh-retrospect/retrospect/expose/model"
 	"github.com/notomo/gh-retrospect/retrospect/query"
 )
 
 type Collected struct {
 	From           time.Time     `json:"from"`
-	ClosedIssues   []query.Issue `json:"closedIssues"`
-	ReportedIssues []query.Issue `json:"reportedIssues"`
+	ClosedIssues   []model.Issue `json:"closedIssues"`
+	ReportedIssues []model.Issue `json:"reportedIssues"`
 }
 
 func Collect(
@@ -31,14 +33,14 @@ func Collect(
 		if err != nil {
 			return nil, fmt.Errorf("collect closed issues: %w", err)
 		}
-		collected.ClosedIssues = res
+		collected.ClosedIssues = expose.Issues(res)
 	}
 	{
 		res, err := client.ReportedIssues(name, from, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect reported issues: %w", err)
 		}
-		collected.ReportedIssues = res
+		collected.ReportedIssues = expose.Issues(res)
 	}
 
 	return &collected, nil

@@ -1,10 +1,16 @@
 package query
 
-import "time"
+import (
+	"github.com/notomo/gh-retrospect/retrospect/expose/model"
+)
 
 type Issue struct {
-	Title     string     `json:"title"`
-	URL       string     `json:"url"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
-	ClosedAt  *time.Time `json:"closed_at,omitempty"`
+	model.IssuePrimitive
+	Labels Labels `graphql:"labels(first: 10)"`
+}
+
+type Labels struct {
+	Nodes []struct {
+		Name string `json:"name"`
+	}
 }

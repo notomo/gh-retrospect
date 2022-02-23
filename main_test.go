@@ -28,13 +28,27 @@ func TestRun(t *testing.T) {
             "title": "title1",
             "url": "https://github.com/notomo/example/issues/1",
             "createdAt": "1971-01-01T00:00:00Z",
-            "closedAt": "1971-01-02T00:00:00Z"
+            "closedAt": "1971-01-02T00:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "label1"
+                }
+              ]
+            }
           },
           {
             "title": "ignored",
             "url": "https://github.com/notomo/example/issues/8888",
             "createdAt": "1972-02-01T00:00:00Z",
-            "closedAt": "1971-01-02T00:00:00Z"
+            "closedAt": "1971-01-02T00:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "label1"
+                }
+              ]
+            }
           }
         ],
         "pageInfo": {
@@ -54,13 +68,19 @@ func TestRun(t *testing.T) {
             "title": "title2",
             "url": "https://github.com/notomo/example/issues/2",
             "createdAt": "1972-02-01T00:00:00Z",
-            "closedAt": null
+            "closedAt": null,
+            "labels": {
+              "nodes": []
+            }
           },
           {
             "title": "ignored",
             "url": "https://github.com/notomo/example/issues/8888",
             "createdAt": "1972-02-01T00:00:00Z",
-            "closedAt": null
+            "closedAt": null,
+            "labels": {
+              "nodes": []
+            }
           }
         ],
         "pageInfo": {
@@ -92,14 +112,16 @@ func TestRun(t *testing.T) {
       "title": "title1",
       "url": "https://github.com/notomo/example/issues/1",
       "created_at": "1971-01-01T00:00:00Z",
-      "closed_at": "1971-01-02T00:00:00Z"
+      "closed_at": "1971-01-02T00:00:00Z",
+      "label_names": ["label1"]
     }
   ],
   "reportedIssues": [
     {
       "title": "title2",
       "url": "https://github.com/notomo/example/issues/2",
-      "created_at": "1972-02-01T00:00:00Z"
+      "created_at": "1972-02-01T00:00:00Z",
+      "label_names": []
     }
   ]
 }`
