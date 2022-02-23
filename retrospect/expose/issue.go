@@ -15,13 +15,8 @@ func Issues(src []query.Issue) []model.Issue {
 
 func Issue(src query.Issue) model.Issue {
 	return model.Issue{
-		IssuePrimitive: model.IssuePrimitive{
-			Title:     src.Title,
-			URL:       src.URL,
-			CreatedAt: src.CreatedAt,
-			ClosedAt:  src.ClosedAt,
-		},
-		LabelNames: LabelNames(src.Labels),
+		IssuePrimitive: src.IssuePrimitive,
+		LabelNames:     LabelNames(src.Labels),
 	}
 }
 

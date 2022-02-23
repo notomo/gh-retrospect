@@ -107,7 +107,7 @@ func TestRun(t *testing.T) {
 
 	want := `{
   "from": "1970-01-01T00:00:00Z",
-  "closedIssues": [
+  "closed_issues": [
     {
       "title": "title1",
       "url": "https://github.com/notomo/example/issues/1",
@@ -116,7 +116,7 @@ func TestRun(t *testing.T) {
       "label_names": ["label1"]
     }
   ],
-  "reportedIssues": [
+  "reported_issues": [
     {
       "title": "title2",
       "url": "https://github.com/notomo/example/issues/2",

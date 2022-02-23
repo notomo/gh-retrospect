@@ -11,8 +11,8 @@ import (
 
 type Collected struct {
 	From           time.Time     `json:"from"`
-	ClosedIssues   []model.Issue `json:"closedIssues"`
-	ReportedIssues []model.Issue `json:"reportedIssues"`
+	ClosedIssues   []model.Issue `json:"closed_issues"`
+	ReportedIssues []model.Issue `json:"reported_issues"`
 }
 
 func Collect(
