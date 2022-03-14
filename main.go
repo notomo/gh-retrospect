@@ -20,6 +20,7 @@ const (
 	paramLimit  = "limit"
 	paramFrom   = "from"
 	paramOutput = "output"
+	paramLog    = "log"
 )
 
 func main() {
@@ -27,6 +28,15 @@ func main() {
 		Name: "gh-retrospect",
 		Action: func(c *cli.Context) error {
 			opts := &api.ClientOptions{}
+			logFilePath := c.String(paramLog)
+			if logFilePath != "" {
+				f, err := os.Create(logFilePath)
+				if err != nil {
+					return fmt.Errorf("create log file: %w", err)
+				}
+				defer f.Close()
+				opts.Log = f
+			}
 			gql, err := gh.GQLClient(opts)
 			if err != nil {
 				return fmt.Errorf("create gql client: %w", err)
@@ -60,6 +70,11 @@ func main() {
 				Name:  paramOutput,
 				Value: "json",
 				Usage: "outputter type",
+			},
+			&cli.StringFlag{
+				Name:  paramLog,
+				Value: "",
+				Usage: "log file path",
 			},
 		},
 	}

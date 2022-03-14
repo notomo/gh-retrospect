@@ -12,3 +12,6 @@ start: install
 
 test:
 	TZ=UTC go test -v ./...
+
+log:
+	gh ${GH_NAME} -log=/dev/stdout
