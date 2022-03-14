@@ -16,9 +16,13 @@ func NewParameter(opts ...func(Parameter)) Parameter {
 	return param
 }
 
+type (
+	DateTime string
+)
+
 func WithFrom(from time.Time) func(Parameter) {
 	return func(p Parameter) {
-		p["from"] = graphql.String(from.Format(time.RFC3339))
+		p["from"] = DateTime(from.Format(time.RFC3339))
 	}
 }
 
