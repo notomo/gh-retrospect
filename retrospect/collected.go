@@ -25,7 +25,7 @@ func Collect(
 
 	name, err := client.ViewerName(userName)
 	if err != nil {
-		return nil, fmt.Errorf("get viewr name: %w", err)
+		return nil, fmt.Errorf("get viewer name: %w", err)
 	}
 
 	{
