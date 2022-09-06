@@ -91,6 +91,42 @@ func TestRun(t *testing.T) {
     }
   }
 }`),
+		gqltest.WithOK("MergedPullRequests", `{
+  "data": {
+    "user": {
+      "pullRequests": {
+        "nodes": [
+          {
+            "title": "pr title1",
+            "url": "https://github.com/notomo/example/pull/3",
+            "createdAt": "1971-01-03T00:00:00Z",
+            "closedAt": "1972-01-03T00:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "label1"
+                }
+              ]
+            }
+          },
+          {
+            "title": "ignored",
+            "url": "https://github.com/notomo/example/pull/4",
+            "createdAt": "1971-01-04T00:00:00Z",
+            "closedAt": "1972-01-04T00:00:00Z",
+            "labels": {
+              "nodes": []
+            }
+          }
+        ],
+        "pageInfo": {
+          "endCursor": "88888888888888888888888888888888888888888888888888888888",
+          "hasNextPage": false
+        }
+      }
+    }
+  }
+}`),
 	)
 	require.NoError(t, err)
 
@@ -122,6 +158,15 @@ func TestRun(t *testing.T) {
       "url": "https://github.com/notomo/example/issues/2",
       "created_at": "1972-02-01T00:00:00Z",
       "label_names": []
+    }
+  ],
+  "merged_pull_requests": [
+    {
+      "title": "pr title1",
+      "url": "https://github.com/notomo/example/pull/3",
+      "created_at": "1971-01-03T00:00:00Z",
+      "closed_at": "1972-01-03T00:00:00Z",
+      "label_names": ["label1"]
     }
   ]
 }`

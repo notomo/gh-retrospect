@@ -10,9 +10,10 @@ import (
 )
 
 type Collected struct {
-	From           time.Time     `json:"from"`
-	ClosedIssues   []model.Issue `json:"closed_issues"`
-	ReportedIssues []model.Issue `json:"reported_issues"`
+	From               time.Time           `json:"from"`
+	ClosedIssues       []model.Issue       `json:"closed_issues"`
+	ReportedIssues     []model.Issue       `json:"reported_issues"`
+	MergedPullRequests []model.PullRequest `json:"merged_pull_requests"`
 }
 
 func Collect(
@@ -44,9 +45,19 @@ func Collect(
 		reportedIssues = expose.Issues(res)
 	}
 
+	var mergedPullRequests []model.PullRequest
+	{
+		res, err := client.MergedPullRequests(name, from, limit)
+		if err != nil {
+			return nil, fmt.Errorf("collect merged pull requests: %w", err)
+		}
+		mergedPullRequests = expose.PullRequests(res)
+	}
+
 	return &Collected{
-		From:           from,
-		ClosedIssues:   closedIssues,
-		ReportedIssues: reportedIssues,
+		From:               from,
+		ClosedIssues:       closedIssues,
+		ReportedIssues:     reportedIssues,
+		MergedPullRequests: mergedPullRequests,
 	}, nil
 }
