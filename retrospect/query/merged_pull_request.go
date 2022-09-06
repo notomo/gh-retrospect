@@ -1,18 +1,19 @@
 package query
 
 import (
+	"fmt"
 	"time"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
-// TODO: improve performance
-
 type MergedPullRequest struct {
-	User struct {
-		PullRequests struct {
-			Nodes    []PullRequest
-			PageInfo PageInfo
-		} `graphql:"pullRequests(first: $limit, after: $after, orderBy: {field:CREATED_AT, direction:ASC}, states: [MERGED])"`
-	} `graphql:"user(login: $userName)"`
+	Search struct {
+		Nodes []struct {
+			PullRequest `graphql:"... on PullRequest"`
+		}
+		PageInfo PageInfo
+	} `graphql:"search(query: $searchQuery, type: ISSUE, first: $limit, after: $after)"`
 }
 
 func (c *Client) MergedPullRequests(
@@ -22,21 +23,26 @@ func (c *Client) MergedPullRequests(
 ) ([]PullRequest, error) {
 	pullRequests := []PullRequest{}
 
+	searchQuery := fmt.Sprintf("author:%s is:pr is:merged sort:created-asc created:>=%s", userName, from.Format(TimeFormat))
+
 	var query MergedPullRequest
 	if err := c.Paginate(
 		"MergedPullRequests",
 		&query,
 		NewParameter(
-			WithUserName(userName),
+			func(p Parameter) {
+				p["searchQuery"] = graphql.String(searchQuery)
+			},
 		),
 		func() (PageInfo, int) {
-			for _, pullRequest := range query.User.PullRequests.Nodes {
+			for _, node := range query.Search.Nodes {
+				pullRequest := node.PullRequest
 				if pullRequest.CreatedAt.Before(from) {
 					continue
 				}
 				pullRequests = append(pullRequests, pullRequest)
 			}
-			return query.User.PullRequests.PageInfo, len(pullRequests)
+			return query.Search.PageInfo, len(pullRequests)
 		},
 		limit,
 	); err != nil {

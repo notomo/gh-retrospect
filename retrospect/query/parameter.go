@@ -20,9 +20,11 @@ type (
 	DateTime string
 )
 
+const TimeFormat = time.RFC3339
+
 func WithFrom(from time.Time) func(Parameter) {
 	return func(p Parameter) {
-		p["from"] = DateTime(from.Format(time.RFC3339))
+		p["from"] = DateTime(from.Format(TimeFormat))
 	}
 }
 
