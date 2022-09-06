@@ -21,27 +21,32 @@ func Collect(
 	from time.Time,
 	limit int,
 ) (*Collected, error) {
-	collected := Collected{From: from}
-
 	name, err := client.ViewerName(userName)
 	if err != nil {
 		return nil, fmt.Errorf("get viewer name: %w", err)
 	}
 
+	var closedIssues []model.Issue
 	{
 		res, err := client.ClosedIssues(name, from, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect closed issues: %w", err)
 		}
-		collected.ClosedIssues = expose.Issues(res)
+		closedIssues = expose.Issues(res)
 	}
+
+	var reportedIssues []model.Issue
 	{
 		res, err := client.ReportedIssues(name, from, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect reported issues: %w", err)
 		}
-		collected.ReportedIssues = expose.Issues(res)
+		reportedIssues = expose.Issues(res)
 	}
 
-	return &collected, nil
+	return &Collected{
+		From:           from,
+		ClosedIssues:   closedIssues,
+		ReportedIssues: reportedIssues,
+	}, nil
 }
