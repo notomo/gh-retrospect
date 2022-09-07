@@ -12,6 +12,7 @@ import (
 func TestRun(t *testing.T) {
 	gql, err := gqltest.New(
 		t,
+
 		gqltest.WithOK("ViewerName", `{
   "data": {
     "viewer": {
@@ -19,6 +20,7 @@ func TestRun(t *testing.T) {
     }
   }
 }`),
+
 		gqltest.WithOK("ClosedIssues", `{
   "data": {
     "user": {
@@ -59,6 +61,7 @@ func TestRun(t *testing.T) {
     }
   }
 }`),
+
 		gqltest.WithOK("ReportedIssues", `{
   "data": {
     "user": {
@@ -91,6 +94,7 @@ func TestRun(t *testing.T) {
     }
   }
 }`),
+
 		gqltest.WithOK("MergedPullRequests", `{
   "data": {
     "search": {
@@ -111,6 +115,41 @@ func TestRun(t *testing.T) {
         {
           "title": "ignored",
           "url": "https://github.com/notomo/example/pull/4",
+          "createdAt": "1971-01-04T00:00:00Z",
+          "closedAt": "1972-01-04T00:00:00Z",
+          "labels": {
+            "nodes": []
+          }
+        }
+      ],
+      "pageInfo": {
+        "endCursor": "88888888888888888888888888888888888888888888888888888888",
+        "hasNextPage": false
+      }
+    }
+  }
+}`),
+
+		gqltest.WithOK("ReviewedPullRequests", `{
+  "data": {
+    "search": {
+      "nodes": [
+        {
+          "title": "pr title2",
+          "url": "https://github.com/notomo/example/pull/4",
+          "createdAt": "1971-01-03T00:00:00Z",
+          "closedAt": "1972-01-03T00:00:00Z",
+          "labels": {
+            "nodes": [
+              {
+                "name": "label1"
+              }
+            ]
+          }
+        },
+        {
+          "title": "ignored",
+          "url": "https://github.com/notomo/example/pull/5",
           "createdAt": "1971-01-04T00:00:00Z",
           "closedAt": "1972-01-04T00:00:00Z",
           "labels": {
@@ -162,6 +201,15 @@ func TestRun(t *testing.T) {
     {
       "title": "pr title1",
       "url": "https://github.com/notomo/example/pull/3",
+      "created_at": "1971-01-03T00:00:00Z",
+      "closed_at": "1972-01-03T00:00:00Z",
+      "label_names": ["label1"]
+    }
+  ],
+  "reviewed_pull_requests": [
+    {
+      "title": "pr title2",
+      "url": "https://github.com/notomo/example/pull/4",
       "created_at": "1971-01-03T00:00:00Z",
       "closed_at": "1972-01-03T00:00:00Z",
       "label_names": ["label1"]
