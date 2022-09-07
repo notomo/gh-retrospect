@@ -21,11 +21,10 @@ func (c *Client) ReviewedPullRequests(
 	from time.Time,
 	limit int,
 ) ([]PullRequest, error) {
-	pullRequests := []PullRequest{}
-
 	searchQuery := fmt.Sprintf("reviewed-by:%s is:pr sort:created-asc created:>=%s", userName, from.Format(TimeFormat))
 
-	var query MergedPullRequest
+	pullRequests := []PullRequest{}
+	var query MergedPullRequests
 	if err := c.Paginate(
 		"ReviewedPullRequests",
 		&query,

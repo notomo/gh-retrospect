@@ -7,7 +7,7 @@ import (
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
-type MergedPullRequest struct {
+type MergedPullRequests struct {
 	Search struct {
 		Nodes []struct {
 			PullRequest `graphql:"... on PullRequest"`
@@ -21,11 +21,10 @@ func (c *Client) MergedPullRequests(
 	from time.Time,
 	limit int,
 ) ([]PullRequest, error) {
-	pullRequests := []PullRequest{}
-
 	searchQuery := fmt.Sprintf("author:%s is:pr is:merged sort:created-asc created:>=%s", userName, from.Format(TimeFormat))
 
-	var query MergedPullRequest
+	pullRequests := []PullRequest{}
+	var query MergedPullRequests
 	if err := c.Paginate(
 		"MergedPullRequests",
 		&query,
