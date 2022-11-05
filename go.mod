@@ -3,7 +3,7 @@ module github.com/notomo/gh-retrospect
 go 1.18
 
 require (
-	github.com/cli/go-gh v0.1.0
+	github.com/cli/go-gh v0.1.2
 	github.com/cli/shurcooL-graphql v0.0.2
 	github.com/stretchr/testify v1.8.1
 	github.com/urfave/cli/v2 v2.14.1
@@ -15,7 +15,12 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/henvic/httpretty v0.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
+	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/mattn/go-runewidth v0.0.13 // indirect
+	github.com/muesli/termenv v0.12.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/thlib/go-timezone-local v0.0.0-20210907160436-ef149e42d28e // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
