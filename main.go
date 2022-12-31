@@ -36,6 +36,7 @@ func main() {
 				}
 				defer f.Close()
 				opts.Log = f
+				opts.LogVerboseHTTP = true
 			}
 			gql, err := gh.GQLClient(opts)
 			if err != nil {
