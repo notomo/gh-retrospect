@@ -1,7 +1,8 @@
 GH_NAME:=retrospect
+GH_FULL_NAME:=gh-${GH_NAME}
 
 build:
-	go build -o gh-${GH_NAME} main.go
+	go build -o ${GH_FULL_NAME} main.go
 
 install: build
 	gh extension remove ${GH_NAME} || echo
@@ -14,4 +15,4 @@ test:
 	TZ=UTC go test -v ./...
 
 log:
-	gh ${GH_NAME} -log=/dev/stdout
+	gh ${GH_NAME} -log=/tmp/${GH_FULL_NAME}

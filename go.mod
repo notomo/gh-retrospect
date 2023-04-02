@@ -1,10 +1,12 @@
 module github.com/notomo/gh-retrospect
 
-go 1.18
+go 1.20
 
 require (
 	github.com/cli/go-gh v1.2.1
 	github.com/cli/shurcooL-graphql v0.0.3
+	github.com/henvic/httpretty v0.1.0
+	github.com/notomo/httpwriter v0.0.0-20230402073442-90e3c7ef0233
 	github.com/stretchr/testify v1.8.2
 	github.com/urfave/cli/v2 v2.25.1
 )
@@ -13,7 +15,6 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/henvic/httpretty v0.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect

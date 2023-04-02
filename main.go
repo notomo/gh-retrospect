@@ -8,9 +8,11 @@ import (
 
 	"github.com/cli/go-gh"
 	"github.com/cli/go-gh/pkg/api"
+	"github.com/henvic/httpretty"
 	"github.com/notomo/gh-retrospect/retrospect"
 	"github.com/notomo/gh-retrospect/retrospect/outputter"
 	"github.com/notomo/gh-retrospect/retrospect/query"
+	"github.com/notomo/httpwriter"
 
 	"github.com/urfave/cli/v2"
 )
@@ -28,15 +30,24 @@ func main() {
 		Name: "gh-retrospect",
 		Action: func(c *cli.Context) error {
 			opts := &api.ClientOptions{}
-			logFilePath := c.String(paramLog)
-			if logFilePath != "" {
-				f, err := os.Create(logFilePath)
-				if err != nil {
-					return fmt.Errorf("create log file: %w", err)
+			logDirPath := c.String(paramLog)
+			if logDirPath != "" {
+				logger := &httpretty.Logger{
+					Time:           true,
+					TLS:            false,
+					RequestHeader:  true,
+					RequestBody:    true,
+					ResponseHeader: true,
+					ResponseBody:   true,
+					Formatters:     []httpretty.Formatter{&httpretty.JSONFormatter{}},
 				}
-				defer f.Close()
-				opts.Log = f
-				opts.LogVerboseHTTP = true
+				opts.Transport = &httpwriter.Transport{
+					Transport: logger.RoundTripper(nil),
+					GetWriter: httpwriter.MustDirectoryWriter(
+						&httpwriter.Directory{Path: logDirPath},
+					),
+					SetWriter: logger.SetOutput,
+				}
 			}
 			gql, err := gh.GQLClient(opts)
 			if err != nil {
@@ -75,7 +86,7 @@ func main() {
 			&cli.StringFlag{
 				Name:  paramLog,
 				Value: "",
-				Usage: "log file path",
+				Usage: "log directory path",
 			},
 		},
 	}
