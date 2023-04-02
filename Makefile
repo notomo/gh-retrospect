@@ -14,5 +14,7 @@ start: install
 test:
 	TZ=UTC go test -v ./...
 
+LOG_DIR:=/tmp/${GH_FULL_NAME}
 log:
-	gh ${GH_NAME} -log=/tmp/${GH_FULL_NAME}
+	rm -rf ${LOG_DIR}
+	gh ${GH_NAME} -log ${LOG_DIR}
