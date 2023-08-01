@@ -10,6 +10,8 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
 	gql, err := gqltest.New(
 		t,
 

@@ -12,7 +12,7 @@ start: install
 	gh ${GH_NAME}
 
 test:
-	TZ=UTC go test -v ./...
+	go test -v ./...
 
 LOG_DIR:=/tmp/${GH_FULL_NAME}
 log:
