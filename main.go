@@ -79,7 +79,7 @@ func main() {
 			&cli.StringFlag{
 				Name:  paramFrom,
 				Value: "",
-				Usage: "YYYY-mm-dd format date, default: last week date",
+				Usage: "YYYY-mm-dd format date or duration, default: last week date",
 			},
 			&cli.StringFlag{
 				Name:  paramOutput,
@@ -102,11 +102,11 @@ func Run(
 	gql api.GQLClient,
 	userName string,
 	limit int,
-	fromDate string,
+	fromDateOrDuration string,
 	outputterType string,
 	writer io.Writer,
 ) error {
-	from, err := retrospect.ParseDate(fromDate)
+	from, err := retrospect.ParseFrom(fromDateOrDuration)
 	if err != nil {
 		return fmt.Errorf("parse date: %w", err)
 	}
