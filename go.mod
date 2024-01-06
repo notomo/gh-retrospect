@@ -8,7 +8,7 @@ require (
 	github.com/henvic/httpretty v0.1.3
 	github.com/notomo/httpwriter v0.0.0-20230801001457-d247ac2be072
 	github.com/stretchr/testify v1.8.4
-	github.com/urfave/cli/v2 v2.27.0
+	github.com/urfave/cli/v2 v2.27.1
 )
 
 require (
