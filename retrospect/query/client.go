@@ -1,15 +1,15 @@
 package query
 
 import (
-	"github.com/cli/go-gh/pkg/api"
+	"github.com/cli/go-gh/v2/pkg/api"
 )
 
 type Client struct {
-	GQL api.GQLClient
+	GQL *api.GraphQLClient
 }
 
 func NewClient(
-	gql api.GQLClient,
+	gql *api.GraphQLClient,
 ) *Client {
 	return &Client{
 		GQL: gql,

@@ -7,8 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/cli/go-gh"
-	"github.com/cli/go-gh/pkg/api"
+	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/henvic/httpretty"
 	"github.com/notomo/gh-retrospect/retrospect"
 	"github.com/notomo/gh-retrospect/retrospect/outputter"
@@ -30,7 +29,7 @@ func main() {
 	app := &cli.App{
 		Name: "gh-retrospect",
 		Action: func(c *cli.Context) error {
-			opts := &api.ClientOptions{}
+			opts := api.ClientOptions{}
 			logDirPath := c.String(paramLog)
 			if logDirPath != "" {
 				opts.Transport = &httpwriter.Transport{
@@ -52,7 +51,7 @@ func main() {
 					),
 				}
 			}
-			gql, err := gh.GQLClient(opts)
+			gql, err := api.NewGraphQLClient(opts)
 			if err != nil {
 				return fmt.Errorf("create gql client: %w", err)
 			}
@@ -99,7 +98,7 @@ func main() {
 }
 
 func Run(
-	gql api.GQLClient,
+	gql *api.GraphQLClient,
 	userName string,
 	limit int,
 	fromDateOrDuration string,
