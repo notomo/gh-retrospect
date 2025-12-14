@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"golang.org/x/sync/errgroup"
+
 	"github.com/notomo/gh-retrospect/retrospect/expose"
 	"github.com/notomo/gh-retrospect/retrospect/expose/model"
 	"github.com/notomo/gh-retrospect/retrospect/query"
@@ -31,39 +33,50 @@ func Collect(
 	}
 
 	var closedIssues []model.Issue
-	{
+	var reportedIssues []model.Issue
+	var mergedPullRequests []model.PullRequest
+	var reviewedPullRequests []model.PullRequest
+
+	g := new(errgroup.Group)
+
+	g.Go(func() error {
 		res, err := client.ClosedIssues(name, from, to, limit)
 		if err != nil {
-			return nil, fmt.Errorf("collect closed issues: %w", err)
+			return fmt.Errorf("collect closed issues: %w", err)
 		}
 		closedIssues = expose.Issues(res)
-	}
+		return nil
+	})
 
-	var reportedIssues []model.Issue
-	{
+	g.Go(func() error {
 		res, err := client.ReportedIssues(name, from, to, limit)
 		if err != nil {
-			return nil, fmt.Errorf("collect reported issues: %w", err)
+			return fmt.Errorf("collect reported issues: %w", err)
 		}
 		reportedIssues = expose.Issues(res)
-	}
+		return nil
+	})
 
-	var mergedPullRequests []model.PullRequest
-	{
+	g.Go(func() error {
 		res, err := client.MergedPullRequests(name, from, to, limit)
 		if err != nil {
-			return nil, fmt.Errorf("collect merged pull requests: %w", err)
+			return fmt.Errorf("collect merged pull requests: %w", err)
 		}
 		mergedPullRequests = expose.PullRequests(res)
-	}
+		return nil
+	})
 
-	var reviewedPullRequests []model.PullRequest
-	{
+	g.Go(func() error {
 		res, err := client.ReviewedPullRequests(name, from, to, limit)
 		if err != nil {
-			return nil, fmt.Errorf("collect reviewed pull requests: %w", err)
+			return fmt.Errorf("collect reviewed pull requests: %w", err)
 		}
 		reviewedPullRequests = expose.PullRequests(res)
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
+		return nil, err
 	}
 
 	return &Collected{
