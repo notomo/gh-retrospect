@@ -1,16 +1,19 @@
 package query
 
 import (
+	"fmt"
 	"time"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type ClosedIssues struct {
-	User struct {
-		Issues struct {
-			Nodes    []Issue
-			PageInfo PageInfo
-		} `graphql:"issues(first: $limit, after: $after, filterBy: {states: CLOSED, since: $from, assignee: $userName}, orderBy: {field:UPDATED_AT, direction:ASC})"`
-	} `graphql:"user(login: $userName)"`
+	Search struct {
+		Nodes []struct {
+			Issue `graphql:"... on Issue"`
+		}
+		PageInfo PageInfo
+	} `graphql:"search(query: $searchQuery, type: ISSUE, first: $limit, after: $after)"`
 }
 
 func (c *Client) ClosedIssues(
@@ -19,6 +22,11 @@ func (c *Client) ClosedIssues(
 	to time.Time,
 	limit int,
 ) ([]Issue, error) {
+	searchQuery := fmt.Sprintf("assignee:%s is:issue is:closed sort:updated-asc closed:>=%s", userName, from.Format(TimeFormat))
+	if !to.IsZero() {
+		searchQuery += fmt.Sprintf(" closed:<=%s", to.Format(TimeFormat))
+	}
+
 	issues := []Issue{}
 
 	var query ClosedIssues
@@ -26,21 +34,28 @@ func (c *Client) ClosedIssues(
 		"ClosedIssues",
 		&query,
 		NewParameter(
-			WithUserName(userName),
-			WithFrom(from),
-			WithTo(to),
+			func(p Parameter) {
+				p["searchQuery"] = graphql.String(searchQuery)
+			},
 		),
 		func() (PageInfo, int) {
-			for _, issue := range query.User.Issues.Nodes {
+			for _, node := range query.Search.Nodes {
+				issue := node.Issue
+
 				if issue.ClosedAt.Before(from) {
 					continue
 				}
 				if !to.IsZero() && issue.ClosedAt.After(to) {
 					continue
 				}
+
+				if !to.IsZero() && issue.UpdatedAt != nil && issue.UpdatedAt.After(to) {
+					return query.Search.PageInfo, limit
+				}
+
 				issues = append(issues, issue)
 			}
-			return query.User.Issues.PageInfo, len(issues)
+			return query.Search.PageInfo, len(issues)
 		},
 		limit,
 	); err != nil {

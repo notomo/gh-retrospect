@@ -25,40 +25,40 @@ func TestRun(t *testing.T) {
 
 		gqltest.WithOK("ClosedIssues", `{
   "data": {
-    "user": {
-      "issues": {
-        "nodes": [
-          {
-            "title": "title1",
-            "url": "https://github.com/notomo/example/issues/1",
-            "createdAt": "1971-01-01T00:00:00Z",
-            "closedAt": "1971-01-01T01:00:00Z",
-            "labels": {
-              "nodes": [
-                {
-                  "name": "label1"
-                }
-              ]
-            }
-          },
-          {
-            "title": "ignored",
-            "url": "https://github.com/notomo/example/issues/8888",
-            "createdAt": "1971-08-08T00:00:00Z",
-            "closedAt": "1971-08-08T08:00:00Z",
-            "labels": {
-              "nodes": [
-                {
-                  "name": "label1"
-                }
-              ]
-            }
+    "search": {
+      "nodes": [
+        {
+          "title": "title1",
+          "url": "https://github.com/notomo/example/issues/1",
+          "createdAt": "1971-01-01T00:00:00Z",
+          "closedAt": "1971-01-01T01:00:00Z",
+          "updatedAt": "1971-01-01T01:00:00Z",
+          "labels": {
+            "nodes": [
+              {
+                "name": "label1"
+              }
+            ]
           }
-        ],
-        "pageInfo": {
-          "endCursor": "88888888888888888888888888888888888888888888888888888888",
-          "hasNextPage": false
+        },
+        {
+          "title": "ignored",
+          "url": "https://github.com/notomo/example/issues/8888",
+          "createdAt": "1971-08-08T00:00:00Z",
+          "closedAt": "1971-08-08T08:00:00Z",
+          "updatedAt": "1971-08-08T08:00:00Z",
+          "labels": {
+            "nodes": [
+              {
+                "name": "label1"
+              }
+            ]
+          }
         }
+      ],
+      "pageInfo": {
+        "endCursor": "88888888888888888888888888888888888888888888888888888888",
+        "hasNextPage": false
       }
     }
   }
@@ -190,6 +190,7 @@ func TestRun(t *testing.T) {
       "url": "https://github.com/notomo/example/issues/1",
       "created_at": "1971-01-01T00:00:00Z",
       "closed_at": "1971-01-01T01:00:00Z",
+      "updated_at": "1971-01-01T01:00:00Z",
       "label_names": ["label1"]
     }
   ],

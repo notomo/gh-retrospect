@@ -7,6 +7,7 @@ type IssuePrimitive struct {
 	URL       string     `json:"url"`
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	ClosedAt  *time.Time `json:"closed_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 type Issue struct {
