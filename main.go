@@ -21,6 +21,7 @@ const (
 	paramUser   = "user"
 	paramLimit  = "limit"
 	paramFrom   = "from"
+	paramTo     = "to"
 	paramOutput = "output"
 	paramLog    = "log"
 )
@@ -60,6 +61,7 @@ func main() {
 				c.String(paramUser),
 				c.Int(paramLimit),
 				c.String(paramFrom),
+				c.String(paramTo),
 				c.String(paramOutput),
 				os.Stdout,
 			)
@@ -79,6 +81,11 @@ func main() {
 				Name:  paramFrom,
 				Value: "",
 				Usage: "YYYY-mm-dd format date or duration, default: last week date",
+			},
+			&cli.StringFlag{
+				Name:  paramTo,
+				Value: "",
+				Usage: "YYYY-mm-dd format date or duration, default: no upper bound",
 			},
 			&cli.StringFlag{
 				Name:  paramOutput,
@@ -102,12 +109,18 @@ func Run(
 	userName string,
 	limit int,
 	fromDateOrDuration string,
+	toDateOrDuration string,
 	outputterType string,
 	writer io.Writer,
 ) error {
 	from, err := retrospect.ParseFrom(fromDateOrDuration)
 	if err != nil {
-		return fmt.Errorf("parse date: %w", err)
+		return fmt.Errorf("parse from date: %w", err)
+	}
+
+	to, err := retrospect.ParseTo(toDateOrDuration)
+	if err != nil {
+		return fmt.Errorf("parse to date: %w", err)
 	}
 
 	outputter, err := outputter.Get(outputterType)
@@ -116,7 +129,7 @@ func Run(
 	}
 
 	client := query.NewClient(gql)
-	collected, err := retrospect.Collect(client, userName, from, limit)
+	collected, err := retrospect.Collect(client, userName, from, to, limit)
 	if err != nil {
 		return fmt.Errorf("collect: %w", err)
 	}

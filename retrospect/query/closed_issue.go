@@ -16,6 +16,7 @@ type ClosedIssues struct {
 func (c *Client) ClosedIssues(
 	userName string,
 	from time.Time,
+	to time.Time,
 	limit int,
 ) ([]Issue, error) {
 	issues := []Issue{}
@@ -27,10 +28,14 @@ func (c *Client) ClosedIssues(
 		NewParameter(
 			WithUserName(userName),
 			WithFrom(from),
+			WithTo(to),
 		),
 		func() (PageInfo, int) {
 			for _, issue := range query.User.Issues.Nodes {
 				if issue.ClosedAt.Before(from) {
+					continue
+				}
+				if !to.IsZero() && issue.ClosedAt.After(to) {
 					continue
 				}
 				issues = append(issues, issue)

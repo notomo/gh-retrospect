@@ -28,6 +28,14 @@ func WithFrom(from time.Time) func(Parameter) {
 	}
 }
 
+func WithTo(to time.Time) func(Parameter) {
+	return func(p Parameter) {
+		// Note: GitHub GraphQL API doesn't support 'until' parameter in filterBy
+		// We rely on client-side filtering instead
+		_ = to
+	}
+}
+
 func WithUserName(userName string) func(Parameter) {
 	return func(p Parameter) {
 		p["userName"] = graphql.String(userName)

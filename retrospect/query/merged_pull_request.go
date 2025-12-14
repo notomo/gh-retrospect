@@ -19,9 +19,13 @@ type MergedPullRequests struct {
 func (c *Client) MergedPullRequests(
 	userName string,
 	from time.Time,
+	to time.Time,
 	limit int,
 ) ([]PullRequest, error) {
 	searchQuery := fmt.Sprintf("author:%s is:pr is:merged sort:created-asc created:>=%s", userName, from.Format(TimeFormat))
+	if !to.IsZero() {
+		searchQuery += fmt.Sprintf(" created:<=%s", to.Format(TimeFormat))
+	}
 
 	pullRequests := []PullRequest{}
 	var query MergedPullRequests
@@ -38,6 +42,10 @@ func (c *Client) MergedPullRequests(
 				pullRequest := node.PullRequest
 				if pullRequest.CreatedAt.Before(from) {
 					continue
+				}
+				if !to.IsZero() && pullRequest.CreatedAt.After(to) {
+					// Since results are sorted by created-asc, stop pagination
+					return query.Search.PageInfo, limit
 				}
 				pullRequests = append(pullRequests, pullRequest)
 			}

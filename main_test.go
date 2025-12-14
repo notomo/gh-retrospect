@@ -176,12 +176,14 @@ func TestRun(t *testing.T) {
 		noUserName,
 		1,
 		"1970-01-01",
+		"",
 		"json",
 		output,
 	))
 
 	want := `{
   "from": "1970-01-01T00:00:00Z",
+  "to": "0001-01-01T00:00:00Z",
   "closed_issues": [
     {
       "title": "title1",

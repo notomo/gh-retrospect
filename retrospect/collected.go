@@ -11,6 +11,7 @@ import (
 
 type Collected struct {
 	From                 time.Time           `json:"from"`
+	To                   time.Time           `json:"to"`
 	ClosedIssues         []model.Issue       `json:"closed_issues"`
 	ReportedIssues       []model.Issue       `json:"reported_issues"`
 	MergedPullRequests   []model.PullRequest `json:"merged_pull_requests"`
@@ -21,6 +22,7 @@ func Collect(
 	client *query.Client,
 	userName string,
 	from time.Time,
+	to time.Time,
 	limit int,
 ) (*Collected, error) {
 	name, err := client.ViewerName(userName)
@@ -30,7 +32,7 @@ func Collect(
 
 	var closedIssues []model.Issue
 	{
-		res, err := client.ClosedIssues(name, from, limit)
+		res, err := client.ClosedIssues(name, from, to, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect closed issues: %w", err)
 		}
@@ -39,7 +41,7 @@ func Collect(
 
 	var reportedIssues []model.Issue
 	{
-		res, err := client.ReportedIssues(name, from, limit)
+		res, err := client.ReportedIssues(name, from, to, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect reported issues: %w", err)
 		}
@@ -48,7 +50,7 @@ func Collect(
 
 	var mergedPullRequests []model.PullRequest
 	{
-		res, err := client.MergedPullRequests(name, from, limit)
+		res, err := client.MergedPullRequests(name, from, to, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect merged pull requests: %w", err)
 		}
@@ -57,7 +59,7 @@ func Collect(
 
 	var reviewedPullRequests []model.PullRequest
 	{
-		res, err := client.ReviewedPullRequests(name, from, limit)
+		res, err := client.ReviewedPullRequests(name, from, to, limit)
 		if err != nil {
 			return nil, fmt.Errorf("collect reviewed pull requests: %w", err)
 		}
@@ -66,6 +68,7 @@ func Collect(
 
 	return &Collected{
 		From:                 from,
+		To:                   to,
 		ClosedIssues:         closedIssues,
 		ReportedIssues:       reportedIssues,
 		MergedPullRequests:   mergedPullRequests,

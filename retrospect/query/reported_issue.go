@@ -16,6 +16,7 @@ type ReportedIssues struct {
 func (c *Client) ReportedIssues(
 	userName string,
 	from time.Time,
+	to time.Time,
 	limit int,
 ) ([]Issue, error) {
 	issues := []Issue{}
@@ -27,11 +28,16 @@ func (c *Client) ReportedIssues(
 		NewParameter(
 			WithUserName(userName),
 			WithFrom(from),
+			WithTo(to),
 		),
 		func() (PageInfo, int) {
 			for _, issue := range query.User.Issues.Nodes {
 				if issue.CreatedAt.Before(from) {
 					continue
+				}
+				if !to.IsZero() && issue.CreatedAt.After(to) {
+					// Since results are sorted by CreatedAt ASC, stop pagination
+					return query.User.Issues.PageInfo, limit
 				}
 				issues = append(issues, issue)
 			}
