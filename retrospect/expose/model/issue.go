@@ -3,11 +3,12 @@ package model
 import "time"
 
 type IssuePrimitive struct {
-	Title     string     `json:"title"`
-	URL       string     `json:"url"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
-	ClosedAt  *time.Time `json:"closed_at,omitempty"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	Title       string     `json:"title"`
+	URL         string     `json:"url"`
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	ClosedAt    *time.Time `json:"closed_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+	StateReason *string    `json:"state_reason,omitempty"`
 }
 
 type Issue struct {

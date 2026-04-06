@@ -33,6 +33,7 @@ func TestRun(t *testing.T) {
           "createdAt": "1971-01-01T00:00:00Z",
           "closedAt": "1971-01-01T01:00:00Z",
           "updatedAt": "1971-01-01T01:00:00Z",
+          "stateReason": "COMPLETED",
           "labels": {
             "nodes": [
               {
@@ -47,6 +48,7 @@ func TestRun(t *testing.T) {
           "createdAt": "1971-08-08T00:00:00Z",
           "closedAt": "1971-08-08T08:00:00Z",
           "updatedAt": "1971-08-08T08:00:00Z",
+          "stateReason": "NOT_PLANNED",
           "labels": {
             "nodes": [
               {
@@ -191,6 +193,7 @@ func TestRun(t *testing.T) {
       "created_at": "1971-01-01T00:00:00Z",
       "closed_at": "1971-01-01T01:00:00Z",
       "updated_at": "1971-01-01T01:00:00Z",
+      "state_reason": "COMPLETED",
       "label_names": ["label1"]
     }
   ],
