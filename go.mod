@@ -5,10 +5,11 @@ go 1.25.0
 require (
 	github.com/cli/go-gh/v2 v2.13.0
 	github.com/cli/shurcooL-graphql v0.0.4
-	github.com/henvic/httpretty v0.1.4
+	github.com/henvic/httpretty v0.2.0
 	github.com/notomo/httpwriter v0.0.0-20230801001457-d247ac2be072
 	github.com/stretchr/testify v1.11.1
 	github.com/urfave/cli/v2 v2.27.7
+	golang.org/x/sync v0.19.0
 )
 
 require (
@@ -25,7 +26,6 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/thlib/go-timezone-local v0.0.0-20210907160436-ef149e42d28e // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/term v0.30.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
