@@ -9,7 +9,7 @@ require (
 	github.com/notomo/httpwriter v0.0.0-20230801001457-d247ac2be072
 	github.com/stretchr/testify v1.11.1
 	github.com/urfave/cli/v2 v2.27.7
-	golang.org/x/sync v0.19.0
+	golang.org/x/sync v0.22.0
 )
 
 require (
