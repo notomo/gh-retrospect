@@ -3,7 +3,7 @@ module github.com/notomo/gh-retrospect
 go 1.26.0
 
 require (
-	github.com/cli/go-gh/v2 v2.16.0
+	github.com/cli/go-gh/v2 v2.16.1
 	github.com/cli/shurcooL-graphql v0.0.4
 	github.com/henvic/httpretty v0.2.0
 	github.com/notomo/httpwriter v0.0.0-20230801001457-d247ac2be072
